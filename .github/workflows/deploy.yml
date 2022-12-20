@@ -1,0 +1,20 @@
+name: Fib-app
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build -t nitesh/fib-app -f ./client/Dockerfile.dev ./client
+      - run: docker run -e CI=true nitesh/fib-app npm test
+      - run: docker build -t nitesh/multi-client-10-14 ./client
+      - run: docker build -t cygnetops/multi-nginx-10-14 ./nginx
+      - run: docker build -t cygnetops/multi-server-10-14 ./server
+      - run: docker build -t cygnetops/multi-worker-10-14 ./worker
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
