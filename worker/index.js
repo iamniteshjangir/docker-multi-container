@@ -7,7 +7,7 @@ const redisClient = redis.createClient({
   retry_strategy: () => 1000,
 });
 
-client.on("error", function(err) {
+redisClient.on("error", function(err) {
   console.log("Redis Client Error: " + err);
 });
 const sub = redisClient.duplicate();
